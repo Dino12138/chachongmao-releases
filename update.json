@@ -1,24 +1,24 @@
 {
- "version": "1.0.3",
+ "version": "1.0.4",
  "min_shell": 2,
- "notes": "操作更清楚：每组可改选保留哪份；处理前弹窗选择「删除」或「合并」并确认；合并过的不再重复列出；可以停止扫描",
+ "notes": "删除或合并后自动核对列表；新增「刷新结果」按钮，切回窗口时也会自动刷新，已删除、已移走的文件不会再显示",
  "files": {
   "dedup.py": {
-   "sha256": "7e647ef9e2786cab1dfb31a2cb0710716594e75a39560608ce6d67de474a1d2a",
+   "sha256": "64ddea00d670e6e743b54025bd5dd7e3099cf2d1b870be70cdf9609fe94755a8",
    "urls": [
-    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.3/dedup.py",
-    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.3/dedup.py",
-    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.3/dedup.py",
-    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.3/dedup.py"
+    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.4/dedup.py",
+    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.4/dedup.py",
+    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.4/dedup.py",
+    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.4/dedup.py"
    ]
   },
   "dedup.html": {
-   "sha256": "92b32b834705d42544a9fe975b9b978c8f12ef702fcfea6f31e1e5513eb6b833",
+   "sha256": "918af5497d0528608e66105a09085638189ce449e3f63e45175cbe8ee191abf8",
    "urls": [
-    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.3/dedup.html",
-    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.3/dedup.html",
-    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.3/dedup.html",
-    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.3/dedup.html"
+    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.4/dedup.html",
+    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.4/dedup.html",
+    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.4/dedup.html",
+    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.4/dedup.html"
    ]
   }
  }
