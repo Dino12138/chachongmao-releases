@@ -1,24 +1,24 @@
 {
- "version": "1.0.0",
+ "version": "1.0.1",
  "min_shell": 1,
- "notes": "首个版本：按内容查重、移到废纸篓或合并占用、在线热更新",
+ "notes": "修复 macOS 14、15 上提示「不能与此版本的 macOS 配合使用」",
  "files": {
   "dedup.py": {
-   "sha256": "656b92266031759f1d86c5f643d5dbfb14fccca5df5ff21e90447e2b2e0e675b",
+   "sha256": "95291bd87b2cc03f491fa48d6e1aec0017058099a40b957e31237327e75102b1",
    "urls": [
-    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.0/dedup.py",
-    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.0/dedup.py",
-    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.0/dedup.py",
-    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.0/dedup.py"
+    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.1/dedup.py",
+    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.1/dedup.py",
+    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.1/dedup.py",
+    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.1/dedup.py"
    ]
   },
   "dedup.html": {
    "sha256": "d2d2afcf5c08efcb365971ae0927f8e60360e6e752be73c04bf11e2821977dbe",
    "urls": [
-    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.0/dedup.html",
-    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.0/dedup.html",
-    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.0/dedup.html",
-    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.0/dedup.html"
+    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.1/dedup.html",
+    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.1/dedup.html",
+    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.1/dedup.html",
+    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.1/dedup.html"
    ]
   }
  }
