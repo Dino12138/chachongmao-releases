@@ -1,24 +1,24 @@
 {
- "version": "1.0.5",
+ "version": "1.0.6",
  "min_shell": 2,
- "notes": "合并说明改得更直白：两份文件互相独立，改其中一份另一份不受影响",
+ "notes": "默认扫描范围新增「文稿」文件夹；文稿里的副本和桌面一样默认不勾选",
  "files": {
   "dedup.py": {
-   "sha256": "7c4bfea9f9880ddccea1c39c94912b05d6665117d7a0e40baa9ab29bf21789e5",
+   "sha256": "8819b9ae1e078d069f2d4f5cbd27ed56f0a218322dda27ac27d762610b617380",
    "urls": [
-    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.5/dedup.py",
-    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.5/dedup.py",
-    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.5/dedup.py",
-    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.5/dedup.py"
+    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.6/dedup.py",
+    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.6/dedup.py",
+    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.6/dedup.py",
+    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.6/dedup.py"
    ]
   },
   "dedup.html": {
-   "sha256": "6c103e4e4b2912d94d13c86fd03493a43dad64a3e0d93ed4c1e79da66f2e9309",
+   "sha256": "f623143db0a12a229c1607c7566427fbf6b95118659c1cb6fe46ff51dfcc8d20",
    "urls": [
-    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.5/dedup.html",
-    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.5/dedup.html",
-    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.5/dedup.html",
-    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.5/dedup.html"
+    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.6/dedup.html",
+    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.6/dedup.html",
+    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.6/dedup.html",
+    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.6/dedup.html"
    ]
   }
  }
