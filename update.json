@@ -1,24 +1,24 @@
 {
- "version": "1.0.6",
+ "version": "1.0.7",
  "min_shell": 2,
- "notes": "默认扫描范围新增「文稿」文件夹；文稿里的副本和桌面一样默认不勾选",
+ "notes": "检查更新时同时询问所有线路并取最新版本，不再被旧缓存挡住；包含 1.0.6 的「文稿」扫描",
  "files": {
   "dedup.py": {
-   "sha256": "8819b9ae1e078d069f2d4f5cbd27ed56f0a218322dda27ac27d762610b617380",
+   "sha256": "1539d5c42219021fa87f14b8f8324a14e9f3c58cc8626d4b78d49d9adef218f6",
    "urls": [
-    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.6/dedup.py",
-    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.6/dedup.py",
-    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.6/dedup.py",
-    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.6/dedup.py"
+    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.7/dedup.py",
+    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.7/dedup.py",
+    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.7/dedup.py",
+    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.7/dedup.py"
    ]
   },
   "dedup.html": {
    "sha256": "f623143db0a12a229c1607c7566427fbf6b95118659c1cb6fe46ff51dfcc8d20",
    "urls": [
-    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.6/dedup.html",
-    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.6/dedup.html",
-    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.6/dedup.html",
-    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.6/dedup.html"
+    "https://raw.githubusercontent.com/Dino12138/chachongmao-releases/main/hot/1.0.7/dedup.html",
+    "https://gcore.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.7/dedup.html",
+    "https://fastly.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.7/dedup.html",
+    "https://cdn.jsdelivr.net/gh/Dino12138/chachongmao-releases@main/hot/1.0.7/dedup.html"
    ]
   }
  }
