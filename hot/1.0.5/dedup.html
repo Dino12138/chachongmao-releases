@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CD的查重猫</title>
+<style>
+:root{--bg:#f5f5f7;--card:#fff;--fg:#1d1d1f;--mute:#6e6e73;--line:#e5e5ea;--acc:#07c160;--warn:#ff3b30;--soft:#e9f9f0}
+@media (prefers-color-scheme:dark){:root{--bg:#1c1c1e;--card:#2c2c2e;--fg:#f5f5f7;--mute:#98989d;--line:#3a3a3c;--soft:#1f3a2b}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px -apple-system,"PingFang SC",sans-serif}
+header{padding:16px 24px;border-bottom:1px solid var(--line)}
+h1{font-size:20px;margin:0 0 6px}.mute{color:var(--mute);font-size:12px}
+.steps{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--mute)}.steps b{color:var(--acc)}
+main{padding:16px 24px 150px;max-width:1100px;margin:auto}
+.card{background:var(--card);border-radius:10px;padding:12px 16px;margin-bottom:10px}
+.roots label{display:flex;gap:8px;align-items:center;padding:3px 0;word-break:break-all}
+button{border:0;border-radius:8px;padding:8px 16px;font-size:14px;cursor:pointer;background:var(--line);color:var(--fg)}
+button.pri{background:var(--acc);color:#fff}button.del{background:var(--warn);color:#fff}button:disabled{opacity:.4;cursor:default}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.f{display:grid;grid-template-columns:88px 1fr auto;gap:10px;align-items:center;padding:6px 0;border-top:1px solid var(--line)}
+.f.keep{background:var(--soft);margin:0 -16px;padding:6px 16px}
+.p{word-break:break-all;font-size:12px;color:var(--mute)}
+.tag{font-size:11px;padding:1px 6px;border-radius:4px;background:var(--line);margin-right:4px}
+.badge{font-size:12px;font-weight:600;color:var(--acc)}
+.pick{display:flex;gap:6px;align-items:center;font-size:13px;cursor:pointer}
+a{color:var(--acc);cursor:pointer;font-size:12px;white-space:nowrap}
+footer{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);padding:8px 24px 12px}
+.tip{font-size:13px;color:var(--mute);padding:2px 0 8px;min-height:2.4em;line-height:1.5}.tip b{color:var(--fg)}
+[data-tip].on button{outline:2px solid var(--acc);outline-offset:2px}
+.quick{font-size:13px;color:var(--mute)}
+progress{width:260px}
+.mask{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:9;padding:24px}
+.dlg{background:var(--card);border-radius:14px;max-width:720px;width:100%;max-height:90vh;overflow:auto;padding:20px 24px}
+.dlg h2{font-size:18px;margin:0 0 12px}
+.opt{display:block;border:2px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px;cursor:pointer}
+.opt.sel{border-color:var(--acc);background:var(--soft)}.opt b{font-size:15px}.opt ul{margin:6px 0 0;padding-left:18px;color:var(--mute);font-size:13px;line-height:1.7}
+.rec{font-size:11px;color:#fff;background:var(--acc);border-radius:4px;padding:1px 6px;margin-left:6px}
+.flist{max-height:160px;overflow:auto;font-size:12px;color:var(--mute);border:1px solid var(--line);border-radius:8px;padding:6px 10px;margin:8px 0 14px;word-break:break-all}
+</style></head><body>
+<header><h1>CD的查重猫 <span class=mute id=ver></span> <a onclick="checkUpd(true)">检查更新</a></h1>
+<div class=steps><span><b>①</b> 点「开始查重」</span><span><b>②</b> 每组确认「保留」哪一份，勾选要处理的副本</span><span><b>③</b> 点「处理勾选的副本」，选删除还是合并，确认后执行</span></div></header>
+<main>
+<div id="upd"></div><div id="warn"></div><div class="card"><b>扫描范围</b><div class="roots" id="roots"></div>
+<div class="row" style="margin-top:8px"><button onclick="addRoot()">＋ 添加文件夹</button>
+<span class="mute">忽略小于 <select id="min"><option value="1024">1 KB</option><option value="1048576" selected>1 MB</option><option value="10485760">10 MB</option></select> 的文件</span>
+<button class="pri" id="go" onclick="scan()">开始查重</button><span data-tip="【刷新结果】按硬盘现状重新核对一遍列表：已删除、已移走、已合并或被改动的文件会从列表里去掉，不会动任何文件。切回本窗口时也会自动刷新。"><button id="refBtn" onclick="refresh(true)" style="display:none">↻ 刷新结果</button></span><button class="del" id="stopBtn" onclick="stopScan()" style="display:none">停止扫描</button><span id="prog"></span></div></div>
+<div id="sum"></div><div id="list"></div>
+</main>
+<footer><div id="tip" class="tip"></div><div class="row"><span id="sel">未选择</span><span style="flex:1"></span>
+<span class=quick>快速勾选：</span>
+<span data-tip="【推荐勾选】只勾「微信」「下载」里的多余副本（通常是重复下载产生的），桌面上的不勾。每组「保留」的那份不会被勾。"><button onclick="quick('rec')">推荐</button></span>
+<span data-tip="【全部副本】除了每组「保留」的那份，其余副本全部勾选，包括桌面上整理过的项目文件。"><button onclick="quick('all')">全部副本</button></span>
+<span data-tip="【清空】取消所有勾选，不会动任何文件。"><button onclick="quick('none')">清空</button></span>
+<span data-tip="【处理勾选的副本】下一步会弹出确认窗口：选择「删除副本（移到废纸篓）」还是「合并空间（副本都保留）」，确认后才会执行。"><button class="pri" id="act" onclick="openDlg()" disabled>处理勾选的副本…</button></span></div></footer>
+<div class=mask id=mask><div class=dlg id=dlg></div></div>
+<script>
+const T='__TOKEN__';const api=(p,b)=>fetch(p,b?{method:'POST',headers:{'X-Token':T},body:JSON.stringify(b)}:{headers:{'X-Token':T}}).then(r=>r.json());
+const KIND={wechat:'微信',downloads:'下载',desktop:'桌面',other:'其他'};
+const TIP0='把鼠标移到下面的按钮上，可以看到每个按钮的作用。';
+let roots=[],groups=[],shown=200,merged=0,mode='trash';
+const sz=b=>b>=1e9?(b/1e9).toFixed(2)+' GB':b>=1e6?(b/1e6).toFixed(1)+' MB':(b/1e3).toFixed(0)+' KB';
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=id=>document.getElementById(id);
+function showTip(t,el){const m=t.match(/^【(.+?)】(.*)$/);$('tip').innerHTML=m?`<b>${m[1]}</b>：${m[2]}`:t;document.querySelectorAll('[data-tip]').forEach(x=>x.classList.toggle('on',x===el))}
+document.addEventListener('mouseover',e=>{const el=e.target.closest('[data-tip]');if(el)showTip(el.dataset.tip,el)});
+document.addEventListener('mouseout',e=>{const el=e.target.closest('[data-tip]');if(el&&!el.contains(e.relatedTarget))showTip(TIP0,null)});
+showTip(TIP0,null);
+function drawRoots(){$('roots').innerHTML=roots.map((r,i)=>`<label><input type=checkbox ${r.on?'checked':''} onchange="roots[${i}].on=this.checked"><span class=tag>${KIND[r.kind]}</span>${esc(r.path)}</label>`).join('')}
+api('/api/roots').then(r=>{roots=r.roots.map(x=>({...x,on:true}));drawRoots();
+ if(r.blocked)$('warn').innerHTML=`<div class=card style="border:2px solid var(--warn)"><b>还读不到微信文件夹</b><div class=mute>需要给本 App 开「完全磁盘访问权限」：点下面按钮 → 在列表里打开「CD的查重猫」的开关（没有就点 ＋ 从「应用程序」里添加）→ 退出本 App 再重新打开。</div><button style="margin-top:8px" onclick="api('/api/settings',{})">打开系统设置</button></div>`});
+async function addRoot(){const r=await api('/api/pick',{});if(r.path){roots.push({path:r.path,kind:'other',on:true});drawRoots()}}
+function scanning(on){$('go').style.display=on?'none':'';$('refBtn').style.display=on?'none':'';$('stopBtn').style.display=on?'':'none';$('stopBtn').disabled=false;$('stopBtn').textContent='停止扫描'}
+async function scan(){scanning(true);$('list').innerHTML='';$('sum').innerHTML='';groups=[];count();
+ await api('/api/scan',{roots:roots.filter(r=>r.on),min_size:+$('min').value});poll()}
+async function stopScan(){$('stopBtn').disabled=true;$('stopBtn').textContent='正在停止…';await api('/api/stop',{})}
+async function poll(){const s=await api('/api/state');const p=$('prog');
+ if(s.status==='listing'){p.textContent='正在列出文件…'}
+ else if(s.status==='hashing'){p.innerHTML=`比对内容 <progress max=${s.total} value=${s.done}></progress> ${s.done}/${s.total}`}
+ if(['done','error','stopped'].includes(s.status)){scanning(false);
+  if(s.status==='stopped'){p.textContent='';$('sum').innerHTML='<div class=card>已停止扫描，没有动任何文件。需要时重新点「开始查重」。</div>';return}
+  p.textContent=s.error?'出错：'+s.error:'';groups=s.groups;merged=s.merged||0;shown=200;draw();return}
+ setTimeout(poll,500)}
+const keepOf=g=>g.files.find(f=>f.keep);
+function draw(){const waste=groups.reduce((a,g)=>a+g.size*g.files.filter(f=>!f.keep&&!f.merged).length,0);
+ const mg=merged?`<div class=mute>另有 ${merged} 组之前已经合并过，不再占额外空间，不在下面列出。</div>`:'';
+ $('sum').innerHTML=groups.length?`<div class=card>找到 <b>${groups.length}</b> 组重复文件，最多可腾出 <b>${sz(waste)}</b>，按占用空间从大到小排列。
+  <div class=mute>每组绿色底的是「保留」的那份，不会被处理；想留另一份，点那一行的「改为保留这份」。已帮你勾选微信、下载里的多余副本；桌面上的副本多半是整理过的项目文件，默认不勾。</div>${mg}</div>`:`<div class=card>没有发现需要清理的重复文件。${mg}</div>`;
+ $('list').innerHTML=groups.slice(0,shown).map((g,gi)=>`<div class=card><div class=row><b>${esc(keepOf(g).name)}</b><span class=mute>${sz(g.size)} × ${g.files.length} 份</span></div>`+
+  g.files.map((f,fi)=>`<div class="f ${f.keep?'keep':''}">`+
+   (f.keep?`<span class=badge>✓ 保留</span>`:f.merged?`<span class=mute>已合并</span>`:`<label class=pick><input type=checkbox ${f.pick?'checked':''} onchange="groups[${gi}].files[${fi}].pick=this.checked;count()">处理</label>`)+
+   `<div><span class=tag>${KIND[f.kind]}</span>${esc(f.name)}<div class=p>${esc(f.path)} · ${new Date(f.mtime*1000).toLocaleDateString()}</div></div>`+
+   `<div style="text-align:right">${f.keep||f.merged?'':`<a onclick="setKeep(${gi},${fi})">改为保留这份</a><br>`}<a onclick="api('/api/reveal',{path:groups[${gi}].files[${fi}].path})">在访达中显示</a></div></div>`).join('')+'</div>').join('')+
+  (groups.length>shown?`<div class=card style="text-align:center"><button onclick="shown+=200;draw()">再显示 200 组（共 ${groups.length} 组；没显示的组也会按勾选处理）</button></div>`:'');
+ count()}
+function setKeep(gi,fi){groups[gi].files.forEach((f,i)=>{if(i===fi){f.keep=true;f.pick=false}else if(f.keep){f.keep=false;f.pick=false}});draw()}
+function picked(){return groups.flatMap(g=>g.files.filter(f=>f.pick&&!f.keep&&!f.merged).map(f=>({path:f.path,keep:keepOf(g).path,size:g.size,kind:f.kind})))}
+function count(){const p=picked();const b=p.reduce((a,x)=>a+x.size,0);
+ $('sel').innerHTML=p.length?`已勾选 <b>${p.length}</b> 个副本，可腾出 <b>${sz(b)}</b>`:'未勾选';$('act').disabled=!p.length}
+function quick(m){if(!groups.length)return alert('还没有查重结果，请先点「开始查重」。');let n=0;
+ groups.forEach(g=>g.files.forEach(f=>{f.pick=!f.keep&&!f.merged&&(m==='all'||(m==='rec'&&f.kind!=='desktop'));n+=f.pick}));draw();
+ showTip(m==='none'?'【清空】已取消所有勾选，没有动任何文件。':n?`【${m==='rec'?'推荐':'全部副本'}】已勾选 ${n} 个副本。下一步：点「处理勾选的副本…」。`:'【推荐】微信、下载里没有多余副本了，剩下的都在桌面上。需要的话点「全部副本」，再选「合并空间」。',null)}
+function openDlg(){const p=picked();if(!p.length)return;mode=p.some(x=>x.kind==='desktop')?'clone':'trash';drawDlg();$('mask').style.display='flex'}
+function closeDlg(){$('mask').style.display='none'}
+function drawDlg(){const p=picked(),b=sz(p.reduce((a,x)=>a+x.size,0)),desk=p.some(x=>x.kind==='desktop');
+ $('dlg').innerHTML=`<h2>怎么处理这 ${p.length} 个副本？</h2>
+ <label class="opt ${mode==='trash'?'sel':''}" onclick="mode='trash';drawDlg()"><b>🗑 删除副本（移到废纸篓）</b>${desk?'':'<span class=rec>推荐</span>'}<ul>
+  <li>副本从原来的位置消失，每组「保留」的那份不动</li><li>删错了可以在废纸篓里「放回原处」</li>
+  <li>清倒废纸篓后释放 <b>${b}</b></li><li>适合：微信、下载里重复下载的文件</li></ul></label>
+ <label class="opt ${mode==='clone'?'sel':''}" onclick="mode='clone';drawDlg()"><b>🔗 合并空间（副本都保留）</b>${desk?'<span class=rec>推荐</span>':''}<ul>
+  <li>副本留在原处、名字不变、照常打开，文件夹结构不受影响</li><li>和「保留」那份共用一块硬盘空间，<b>马上释放 ${b}</b></li>
+  <li>合并完就结束了，<b>不需要再移到废纸篓</b>，以后扫描也不会再列出来</li><li>两份文件都还在、互相独立：改其中一份，另一份不受影响；改动的部分会重新占用空间</li><li>适合：桌面上整理好的项目文件夹</li></ul></label>
+ <div class=mute>将要${mode==='trash'?'移到废纸篓':'合并'}的文件：</div>
+ <div class=flist>${p.slice(0,100).map(x=>esc(x.path)).join('<br>')}${p.length>100?`<br>……共 ${p.length} 个`:''}</div>
+ <div class=row style="justify-content:flex-end"><button onclick="closeDlg()">取消</button>
+ <button class="${mode==='trash'?'del':'pri'}" onclick="doAct()">${mode==='trash'?`确认删除 ${p.length} 个副本`:`确认合并 ${p.length} 个副本`}</button></div>`}
+async function doAct(){const p=picked();$('dlg').innerHTML='<h2>正在处理，请稍候…</h2><div class=mute>合并前会再完整比对一次内容，大文件需要一点时间。</div>';
+ const r=await api(mode==='trash'?'/api/trash':'/api/clone',{items:p.map(x=>({path:x.path,keep:x.keep}))});
+ const fail=r.failed.length?`<p class=mute>${r.failed.length} 个没有处理（文件已变化、已不存在，或会导致一份不剩），已保持原样。</p>`:'';
+ const ok='<div class=row style="justify-content:flex-end"><button class=pri onclick="closeDlg()">好</button></div>';
+ $('dlg').innerHTML=mode==='trash'?`<h2>已移到废纸篓 ${r.done} 个副本</h2><p>清倒废纸篓后会释放约 <b>${sz(r.freed)}</b>。删错了可以在废纸篓里右键「放回原处」。</p>${fail}${ok}`
+  :`<h2>已合并 ${r.done} 个副本</h2><p>已释放约 <b>${sz(r.freed)}</b>。文件都还在原处，照常使用；<b>不需要再移到废纸篓</b>。</p>${fail}${ok}`;
+ await sync()}
+// 从服务端取最新列表，保留你在页面上改过的勾选和「保留」选择
+async function sync(){const s=await api('/api/state');const old=new Map(groups.flatMap(g=>g.files.map(f=>[f.path,[f.pick,f.keep]])));
+ groups=s.groups;merged=s.merged||0;groups.forEach(g=>{g.files.forEach(f=>{const o=old.get(f.path);if(o){f.pick=o[0]&&!f.merged;f.keep=o[1]}});
+  const k=g.files.filter(f=>f.keep);if(k.length!==1){g.files.forEach(f=>f.keep=false);g.files[0].keep=true}g.files.forEach(f=>{if(f.keep)f.pick=false})});draw()}
+let busy=false;
+async function refresh(manual){if(busy||!groups.length&&!manual||$('mask').style.display==='flex'||$('go').style.display==='none')return;busy=true;
+ try{const r=await api('/api/refresh',{});if(!r.ok){if(manual)alert('正在扫描，等扫描结束再刷新。');return}await sync();
+  if(manual)showTip(r.gone?`【刷新结果】已去掉 ${r.gone} 个不在原处或已变化的文件，列表是最新的。`:'【刷新结果】列表已是最新，没有变化。',null)}finally{busy=false}}
+window.addEventListener('focus',()=>refresh(false));document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh(false)});
+async function checkUpd(manual){const r=await api('/api/check',{});const u=$('upd');
+ if(!r.ok){if(manual)alert('连不上更新服务器，请稍后再试');return}
+ if(!r.new){if(manual)alert('已经是最新版 v'+r.current);u.innerHTML='';return}
+ u.innerHTML=`<div class=card style="border:2px solid var(--acc)"><b>发现新版 v${esc(r.latest)}</b>（当前 v${esc(r.current)}）<div class=mute>${esc(r.notes)}</div><div style="margin-top:8px">`+
+  (r.need_dmg?`<span class=mute>这一版需要重新下载安装包。</span> <button class=pri onclick="api('/api/open',{url:'${r.page}'})">去下载</button>`:`<button class=pri id=updBtn onclick="doUpd()">立即更新（几秒钟，不用重装）</button>`)+'</div></div>'}
+async function doUpd(){const b=$('updBtn');b.disabled=true;b.textContent='正在下载并校验…';
+ const r=await api('/api/update',{});if(!r.ok){b.disabled=false;b.textContent='重试';alert('更新失败：'+r.error);return}
+ b.textContent='正在重启…';for(let i=0;i<30;i++){await new Promise(x=>setTimeout(x,1000));try{const x=await api('/api/version');if(x.version===r.version){location.reload();return}}catch(e){}}
+ alert('更新已下载，请退出后重新打开 App')}
+api('/api/version').then(r=>$('ver').textContent='v'+r.version);checkUpd(false);
+</script></body></html>
